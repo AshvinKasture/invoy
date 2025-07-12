@@ -259,3 +259,7 @@ ipython_config.py
 
 # pyenv
 .python-version
+
+# Backend specific
+backend/dist/
+backend/.env
