@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import { isDevelopment } from './environment';
 import { ApiResponse } from '../types';
 
 /**
@@ -31,7 +32,7 @@ export const sendError = (
   const response: ApiResponse = {
     success: false,
     message,
-    error: process.env.NODE_ENV === 'development' ? error : undefined,
+    error: isDevelopment() ? error : undefined,
     timestamp: new Date().toISOString()
   };
   res.status(statusCode).json(response);

@@ -7,6 +7,7 @@
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
     "clean": "rm -rf dist",
+    "migrate": "ts-node src/database/migration/manager.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -19,13 +20,18 @@
   "description": "Backend API server with Express and TypeScript",
   "devDependencies": {
     "@types/express": "^4.17.23",
+    "@types/mssql": "^9.1.7",
     "@types/node": "^24.0.13",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@types/pg": "^8.15.4",
+    "dotenv": "^17.2.0",
     "express": "^4.21.2",
-    "express-validator": "^7.2.1"
+    "express-validator": "^7.2.1",
+    "mssql": "^11.0.1",
+    "pg": "^8.16.3"
   }
 }

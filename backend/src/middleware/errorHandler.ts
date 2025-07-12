@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { sendError } from '../utils/response';
+import { isDevelopment } from '../utils/environment';
 
 /**
  * Global error handling middleware
@@ -21,7 +22,7 @@ export const errorHandler = (
     res,
     'Something went wrong!',
     500,
-    process.env.NODE_ENV === 'development' ? err.message : undefined
+    isDevelopment() ? err.message : undefined
   );
 };
 

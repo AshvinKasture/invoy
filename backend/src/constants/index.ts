@@ -8,6 +8,18 @@ export const API_CONFIG = {
   REQUEST_SIZE_LIMIT: '10mb'
 } as const;
 
+// Database Configuration
+export const DB_CONFIG = {
+  DEFAULT_PORT: 1433,
+  DEFAULT_POOL_MAX: 10,
+  DEFAULT_POOL_MIN: 0,
+  DEFAULT_IDLE_TIMEOUT: 30000,
+  DEFAULT_CONNECTION_TIMEOUT: 15000,
+  DEFAULT_REQUEST_TIMEOUT: 15000,
+  MAX_RETRY_ATTEMPTS: 3,
+  HEALTH_CHECK_INTERVAL: 30000 // 30 seconds
+} as const;
+
 // HTTP Status Codes
 export const HTTP_STATUS = {
   OK: 200,

@@ -2,6 +2,10 @@
 export * from './controllers/userController';
 export * from './controllers/productController';
 
+// Database
+export * from './database';
+export * from './services/database';
+
 // Routes
 export { default as userRoutes } from './routes/userRoutes';
 export { default as productRoutes } from './routes/productRoutes';

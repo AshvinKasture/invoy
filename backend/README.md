@@ -1,25 +1,44 @@
 # Invoy Backend API
 
-A RESTful API built with Express.js and TypeScript, featuring a clean architecture with controllers, routes, and middleware.
+A robust RESTful API built with Express.js, TypeScript, and a multi-database framework supporting PostgreSQL and MSSQL.
 
 ## 🚀 Features
 
-- **TypeScript** - Type-safe development
-- **Express.js** - Fast web framework
+- **TypeScript** - Type-safe development with comprehensive interfaces
+- **Express.js** - Fast, minimal web framework
+- **Multi-Database Support** - PostgreSQL (primary) and MSSQL (secondary) with database-agnostic abstraction
+- **Enterprise Database Framework** - Advanced connection pooling, health monitoring, and retry logic
 - **Express-Validator** - Robust request validation and sanitization
 - **Clean Architecture** - Organized codebase with separation of concerns
-- **Input Validation** - Comprehensive request validation middleware
+- **Advanced Migration System** - Schema management with rollback support and checksum validation
+- **Connection Pooling** - Optimized database connections with monitoring
+- **Health Checks** - API and database health monitoring with metrics
 - **Error Handling** - Global error handling and consistent API responses
-- **CORS Support** - Cross-origin resource sharing
-- **Request Logging** - Automatic request logging
-- **Health Checks** - API health monitoring
-- **Pagination & Filtering** - Built-in pagination and search capabilities
+- **Security** - SSL/TLS support, connection encryption, and secure authentication
 
 ## 📁 Project Structure
 
 ```
 src/
-├── controllers/        # Business logic and request handlers
+├── database/              # Database framework and abstraction layer
+│   ├── core/             # Core interfaces and configuration
+│   │   ├── interfaces.ts # TypeScript interfaces and types
+│   │   └── config.ts     # Configuration management
+│   ├── drivers/          # Database-specific implementations
+│   │   ├── postgresql.ts # PostgreSQL driver (primary)
+│   │   ├── mssql.ts      # MSSQL driver (secondary)
+│   │   └── factory.ts    # Connection factory
+│   ├── services/         # Database-agnostic service layer
+│   │   └── database.ts   # Service abstraction
+│   ├── migration/        # Migration system
+│   │   └── manager.ts    # Migration manager
+│   ├── main.ts          # Database manager (main entry point)
+│   ├── index.ts         # Public exports
+│   ├── schema.sql       # MSSQL schema
+│   └── schema-postgres.sql # PostgreSQL schema
+├── services/          # Database service layer
+│   └── database.ts    # Base service classes
+├── controllers/       # Business logic and request handlers
 │   ├── userController.ts
 │   └── productController.ts
 ├── routes/            # API route definitions
@@ -46,17 +65,52 @@ src/
 
 ## 🛠️ Setup
 
-1. Install dependencies:
+### Prerequisites
+- Node.js 18+ and npm
+- Azure subscription
+- Azure SQL Database
+- Azure CLI (for deployment)
+
+### 1. Install Dependencies
 ```bash
 npm install
 ```
 
-2. Copy environment variables:
+### 2. Environment Setup
 ```bash
 cp .env.example .env
 ```
 
-3. Update environment variables in `.env` file
+Configure your `.env` file with your database connection string. You have several options:
+
+#### Option 1: SQL Server LocalDB (Recommended for Development)
+Perfect for local development with Visual Studio:
+```env
+DB_CONNECTION_STRING=Server=(localdb)\\MSSQLLocalDB;Database=InvoyDB;Trusted_Connection=true;TrustServerCertificate=true;
+```
+
+#### Option 2: Azure SQL Database (Production)
+For cloud deployment:
+```env
+DB_CONNECTION_STRING=Server=your-server-name.database.windows.net;Database=your-database-name;User Id=your-username;Password=your-password;Encrypt=true;TrustServerCertificate=false;
+```
+
+#### Option 3: SQL Server Express (Local)
+For a full local SQL Server installation:
+```env
+DB_CONNECTION_STRING=Server=localhost\\SQLEXPRESS;Database=InvoyDB;Trusted_Connection=true;TrustServerCertificate=true;
+```
+
+For detailed LocalDB setup instructions, see `src/database/LocalDB-Setup.md`.
+
+### 3. Database Setup
+
+See `src/database/README.md` for detailed Azure SQL Database setup instructions.
+
+Initialize your database schema:
+```bash
+npm run migrate init
+```
 
 ## 🏃‍♂️ Running the Application
 
@@ -73,9 +127,41 @@ npm start
 
 ### Other Scripts
 ```bash
-npm run clean    # Remove dist folder
-npm test         # Run tests (when implemented)
+npm run build        # Build TypeScript to JavaScript
+npm run clean        # Remove dist folder
+npm run migrate init # Initialize database schema
+npm run migrate status # Check migration status
+npm test            # Run tests (when implemented)
 ```
+
+## 🗄️ Database
+
+This API supports multiple database options for different environments:
+
+- **SQL Server LocalDB** (recommended for local development with Visual Studio)
+- **Azure SQL Database** (for cloud deployment)
+- **SQL Server Express** (for local development)
+- **Docker SQL Server** (for cross-platform development)
+
+### Database Features
+- Connection pooling with retry logic
+- Automated migrations and schema management
+- Health monitoring and diagnostics
+- Transaction support
+- Parameterized queries for security
+- Windows Authentication support for LocalDB
+
+### Database Setup
+
+See the comprehensive database documentation in the [`docs/database/`](../docs/database/) folder:
+
+- **[Quick Start Guide](../docs/database/quick-start.md)** - Get up and running quickly
+- **[Architecture Overview](../docs/database/architecture.md)** - Understanding the framework design  
+- **[Configuration Guide](../docs/database/configuration.md)** - Detailed configuration options
+- **[PostgreSQL Setup](../docs/database/postgresql.md)** - PostgreSQL-specific setup
+- **[MSSQL Setup](../docs/database/mssql.md)** - SQL Server and Azure SQL setup
+- **[Migration System](../docs/database/migrations.md)** - Schema management
+- **[Troubleshooting](../docs/database/troubleshooting.md)** - Common issues and solutions
 
 ## 📚 API Endpoints
 
@@ -85,7 +171,13 @@ http://localhost:8000
 ```
 
 ### Health Check
-- **GET** `/api/health` - API health status
+- **GET** `/api/health` - API and database health status
+
+Response includes:
+- Application uptime and version
+- Database connection status
+- Environment information
+- Timestamp
 
 ### Users
 - **GET** `/api/users` - Get all users (with pagination, search, sorting)
