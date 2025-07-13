@@ -4,30 +4,44 @@ Welcome to the comprehensive documentation for the Invoy application.
 
 ## 📁 Documentation Structure
 
-### 🗃️ Database Framework
-Complete documentation for the robust multi-database framework:
+This documentation is organized into frontend and backend sections for better organization:
 
-- **[Database Overview](./database/README.md)** - Framework overview and features
-- **[Architecture](./database/architecture.md)** - Framework design and components
-- **[Quick Start](./database/quick-start.md)** - Get up and running quickly
-- **[Configuration](./database/configuration.md)** - Detailed configuration options
-- **[PostgreSQL Setup](./database/postgresql.md)** - PostgreSQL configuration (Primary)
-- **[MSSQL Setup](./database/mssql.md)** - SQL Server configuration (Secondary)
-- **[Migration System](./database/migrations.md)** - Schema management and migrations
-- **[Troubleshooting](./database/troubleshooting.md)** - Common issues and solutions
+### 🎨 Frontend Documentation
+Complete documentation for the React frontend application:
+
+- **[Store Management](./frontend/store.md)** - Global state management with React Context API
+- **[API Helper](./frontend/API_HELPER.md)** - API abstraction layer and utilities
+- **[Environment Configuration](./frontend/ENVIRONMENT.md)** - Environment variables and configuration
+
+### ⚙️ Backend Documentation
+Complete documentation for the Node.js backend and database framework:
+
+- **[Database Overview](./backend/database/README.md)** - Framework overview and features
+- **[Architecture](./backend/database/architecture.md)** - Framework design and components
+- **[Quick Start](./backend/database/quick-start.md)** - Get up and running quickly
+- **[Configuration](./backend/database/configuration.md)** - Detailed configuration options
+- **[PostgreSQL Setup](./backend/database/postgresql.md)** - PostgreSQL configuration (Primary)
+- **[MSSQL Setup](./backend/database/mssql.md)** - SQL Server configuration (Secondary)
+- **[Migration System](./backend/database/migrations.md)** - Schema management and migrations
+- **[Troubleshooting](./backend/database/troubleshooting.md)** - Common issues and solutions
 
 ## 🚀 Quick Navigation
 
-### For Developers
-- **New to the project?** Start with [Database Quick Start](./database/quick-start.md)
-- **Setting up development environment?** See [PostgreSQL Setup](./database/postgresql.md) or [MSSQL Setup](./database/mssql.md)
-- **Need to run migrations?** Check [Migration System](./database/migrations.md)
-- **Having issues?** Check [Troubleshooting](./database/troubleshooting.md)
+### For Frontend Developers
+- **New to the frontend?** Start with [Store Management](./frontend/store.md)
+- **Working with APIs?** Check [API Helper](./frontend/API_HELPER.md)
+- **Setting up environment?** See [Environment Configuration](./frontend/ENVIRONMENT.md)
+
+### For Backend Developers
+- **New to the project?** Start with [Database Quick Start](./backend/database/quick-start.md)
+- **Setting up development environment?** See [PostgreSQL Setup](./backend/database/postgresql.md) or [MSSQL Setup](./backend/database/mssql.md)
+- **Need to run migrations?** Check [Migration System](./backend/database/migrations.md)
+- **Having issues?** Check [Troubleshooting](./backend/database/troubleshooting.md)
 
 ### For DevOps/Infrastructure
-- **Understanding the architecture?** Read [Database Architecture](./database/architecture.md)
-- **Configuring for production?** See [Configuration Guide](./database/configuration.md)
-- **Setting up CI/CD?** Check [Migration System](./database/migrations.md)
+- **Understanding the architecture?** Read [Database Architecture](./backend/database/architecture.md)
+- **Configuring for production?** See [Configuration Guide](./backend/database/configuration.md)
+- **Setting up CI/CD?** Check [Migration System](./backend/database/migrations.md)
 
 ### For Database Administrators
 - **PostgreSQL setup?** See [PostgreSQL Setup](./database/postgresql.md)
