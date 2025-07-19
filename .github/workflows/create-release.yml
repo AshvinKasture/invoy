@@ -97,3 +97,4 @@ jobs:
           branch: release/dev-to-main-${{ steps.version.outputs.new_version }}
           delete-branch: true
           labels: release
+          reviewers: ${{ github.actor }}
