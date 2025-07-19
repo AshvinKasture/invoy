@@ -1,0 +1,100 @@
+name: Create Release PR
+
+on:
+  workflow_dispatch:  # Manual trigger only
+    inputs:
+      bump_type:
+        description: 'Version bump type'
+        required: true
+        type: choice
+        options:
+          - patch  # 1.0.0 → 1.0.1 (bug fixes)
+          - minor  # 1.0.0 → 1.1.0 (new features)
+          - major  # 1.0.0 → 2.0.0 (breaking changes)
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-release-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: dev
+
+      - name: Get latest version and calculate next version
+        id: version
+        run: |
+          # Get the latest tag, default to v0.0.0 if no tags exist
+          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "Current version: $latest_tag"
+          
+          # Remove 'v' prefix and split version into parts
+          version=${latest_tag#v}
+          IFS='.' read -r major minor patch <<< "$version"
+          
+          # Bump version based on input
+          case "${{ github.event.inputs.bump_type }}" in
+            "major")
+              major=$((major + 1))
+              minor=0
+              patch=0
+              ;;
+            "minor")
+              minor=$((minor + 1))
+              patch=0
+              ;;
+            "patch")
+              patch=$((patch + 1))
+              ;;
+          esac
+          
+          new_version="v${major}.${minor}.${patch}"
+          echo "New version: $new_version"
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+
+      - name: Get commits for release
+        id: commits
+        run: |
+          # Get commits between main and dev
+          commits=$(git log main..dev --oneline --no-merges)
+          
+          # Format commits for markdown
+          if [ -n "$commits" ]; then
+            echo "commits<<EOF" >> $GITHUB_OUTPUT
+            echo "$commits" | sed 's/^/- /' >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "commits=- No new commits to release" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Release PR from dev → main
+        id: cpr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Release ${{ steps.version.outputs.new_version }}: Merge dev into main"
+          title: "🚀 Release ${{ steps.version.outputs.new_version }}: Merge dev → main"
+          body: |
+            ## 🚀 Release Pull Request - ${{ steps.version.outputs.new_version }}
+            
+            This PR merges the latest changes from `dev` branch into `main` for release ${{ steps.version.outputs.new_version }}.
+            
+            **Version:** ${{ steps.version.outputs.new_version }} (${{ github.event.inputs.bump_type }} bump)
+            **Branch:** `dev` → `main`
+            **Merge Strategy:** Squash and merge (recommended)
+            
+            ### 📝 Changes in this release:
+            ${{ steps.commits.outputs.commits }}
+            
+            **Note:** This PR should be merged using "Squash and merge" to maintain a clean main branch history.
+          base: main
+          branch: release/dev-to-main-${{ steps.version.outputs.new_version }}
+          delete-branch: true
+          labels: release
+          reviewers: ${{ github.actor }}
