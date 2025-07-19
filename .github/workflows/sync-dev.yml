@@ -26,9 +26,14 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: Sync main → dev
-          title: Sync main → dev
+          title: "Sync main → dev (${{ github.sha }})"
           body: |
-            This pull request syncs the `main` branch into `dev` after a production release.
+            🔄 **Automatic sync from main to dev**
+            
+            Syncing commit: `${{ github.sha }}`
+            Triggered by: ${{ github.actor }}
+            
+            This pull request syncs the latest changes from `main` branch into `dev`.
           base: dev
           branch: sync-main-to-dev
           delete-branch: true
