@@ -1,13 +1,32 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import RootLayout from "@/layouts/RootLayout";
+import Home from "@/pages/Home";
+import About from "@/pages/About";
+import Contact from "@/pages/Contact";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <RootLayout />,
+    children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
+      {
+        path: "/about",
+        element: <About />,
+      },
+      {
+        path: "/contact",
+        element: <Contact />,
+      },
+    ],
+  },
+]);
 
 function App() {
-  return (
-    <div className="w-screen h-screen flex flex-col gap-5 justify-center items-center">
-      <div className="text-3xl font-bold">This is a button</div>
-      <Button>Click me!</Button>
-    </div>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
