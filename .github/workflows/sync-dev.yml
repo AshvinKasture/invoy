@@ -1,0 +1,48 @@
+name: Sync main to dev
+
+on:
+  push:
+    branches:
+      - main  # Triggers when something is pushed to main (e.g., after a squash+merge)
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync-branches:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Create Pull Request to sync main → dev
+        id: cpr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Sync main → dev
+          title: "Sync main → dev (${{ github.sha }})"
+          body: |
+            🔄 **Automatic sync from main to dev**
+            
+            Syncing commit: `${{ github.sha }}`
+            Triggered by: ${{ github.actor }}
+            
+            This pull request syncs the latest changes from `main` branch into `dev`.
+          base: dev
+          branch: sync-main-to-dev
+          delete-branch: true
+          labels: automated-pr, sync
+
+      - name: Auto-merge the sync PR
+        if: steps.cpr.outputs.pull-request-url != ''
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+          merge-method: merge
