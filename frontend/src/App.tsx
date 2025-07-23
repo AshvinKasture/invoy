@@ -3,6 +3,7 @@ import { AuthContextProvider } from "@/context/authContext";
 import RootLayout from "@/layouts/RootLayout";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
+import ErrorPage from "@/pages/ErrorPage";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Profile from "@/pages/Profile";
@@ -13,6 +14,7 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/",
@@ -21,6 +23,7 @@ const router = createBrowserRouter([
         <RootLayout />
       </ProtectedRoute>
     ),
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/",
