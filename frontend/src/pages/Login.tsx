@@ -8,6 +8,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useAppContext } from "@/context/appContext";
 import { useAuthContext } from "@/context/authContext";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -23,7 +24,8 @@ interface LoginFormData {
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
-  const { login, isLoading } = useAuthContext();
+  const { login } = useAuthContext();
+  const { isLoading, showSpinner, hideSpinner } = useAppContext();
   const navigate = useNavigate();
 
   const form = useForm<LoginFormData>({
@@ -36,17 +38,16 @@ export default function Login() {
   const onSubmit = async (data: LoginFormData) => {
     form.clearErrors();
 
+    showSpinner();
     try {
       await login(data.username, data.password);
 
-      // Show success toast
       toast.success("Login successful!");
-
-      // Redirect to home or intended page
       navigate("/");
     } catch (err) {
-      // Show error toast instead of form error
       toast.error(err instanceof Error ? err.message : "Login failed");
+    } finally {
+      hideSpinner();
     }
   };
 

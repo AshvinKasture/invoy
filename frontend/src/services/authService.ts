@@ -50,4 +50,26 @@ export class AuthService {
   static isAuthenticated(): boolean {
     return this.getAuthToken() !== null;
   }
+
+  // Validate token with backend
+  static async validateToken(): Promise<UserDto | null> {
+    const token = this.getAuthToken();
+    if (!token) {
+      return null;
+    }
+
+    try {
+      const response = await apiHelper.get<{
+        success: boolean;
+        message: string;
+        user: UserDto;
+      }>("/users/validate-token");
+
+      return response.user;
+    } catch (error) {
+      // If token validation fails, clear it
+      this.clearAuthToken();
+      return null;
+    }
+  }
 }

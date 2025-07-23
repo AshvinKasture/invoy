@@ -8,7 +8,6 @@ interface AuthContextType {
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
   getUserInitials: () => string;
-  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -17,7 +16,6 @@ const AuthContext = createContext<AuthContextType>({
   login: async () => {},
   logout: () => {},
   getUserInitials: () => "",
-  isLoading: false,
 });
 
 export const AuthContextProvider = ({
@@ -26,29 +24,23 @@ export const AuthContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [user, setUser] = useState<UserDto | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   const login = async (username: string, password: string) => {
-    setIsLoading(true);
     try {
       const data = await AuthService.login({ username, password });
 
-      // Set user in context (token is already stored by AuthService)
       setUser({
         id: data.user.id,
         name: data.user.name,
         username: data.user.username,
       });
     } catch (error) {
-      throw error; // Re-throw to let the component handle the error
-    } finally {
-      setIsLoading(false);
+      throw error;
     }
   };
 
   const logout = () => {
     setUser(null);
-    // Clear JWT token using AuthService
     AuthService.clearAuthToken();
   };
 
@@ -64,7 +56,13 @@ export const AuthContextProvider = ({
 
   return (
     <AuthContext.Provider
-      value={{ user, setUser, login, logout, getUserInitials, isLoading }}
+      value={{
+        user,
+        setUser,
+        login,
+        logout,
+        getUserInitials,
+      }}
     >
       {children}
     </AuthContext.Provider>

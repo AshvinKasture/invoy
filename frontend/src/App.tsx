@@ -1,4 +1,7 @@
+import AuthInitializer from "@/components/AuthInitializer";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import PublicRoute from "@/components/PublicRoute";
+import { AppContextProvider } from "@/context/appContext";
 import { AuthContextProvider } from "@/context/authContext";
 import RootLayout from "@/layouts/RootLayout";
 import About from "@/pages/About";
@@ -13,7 +16,11 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 const router = createBrowserRouter([
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <PublicRoute>
+        <Login />
+      </PublicRoute>
+    ),
     errorElement: <ErrorPage />,
   },
   {
@@ -51,9 +58,13 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <AuthContextProvider>
-      <RouterProvider router={router} />
-    </AuthContextProvider>
+    <AppContextProvider>
+      <AuthContextProvider>
+        <AuthInitializer>
+          <RouterProvider router={router} />
+        </AuthInitializer>
+      </AuthContextProvider>
+    </AppContextProvider>
   );
 }
 

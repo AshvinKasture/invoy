@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import db from "../db/database";
 import { AppError, asyncHandler } from "../middleware/errorHandler";
-import { generateToken } from "../utils/jwt";
+import { generateToken, verifyToken } from "../utils/jwt";
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
   const { username, password } = req.body;
@@ -42,3 +42,44 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     },
   });
 });
+
+export const validateToken = asyncHandler(
+  async (req: Request, res: Response) => {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      throw new AppError("No token provided", 401);
+    }
+
+    const token = authHeader.substring(7); // Remove "Bearer " prefix
+
+    try {
+      // Verify the token
+      const decoded = verifyToken(token);
+
+      // Check if user still exists in database
+      const user = await db
+        .selectFrom("users")
+        .select(["id", "name", "username"])
+        .where("id", "=", decoded.userId)
+        .executeTakeFirst();
+
+      if (!user) {
+        throw new AppError("User not found", 404);
+      }
+
+      // Return user information if token is valid
+      return res.status(200).json({
+        success: true,
+        message: "Token is valid",
+        user: {
+          id: user.id,
+          name: user.name,
+          username: user.username,
+        },
+      });
+    } catch (error) {
+      throw new AppError("Invalid token", 401);
+    }
+  }
+);
