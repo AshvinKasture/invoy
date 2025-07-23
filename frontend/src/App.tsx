@@ -1,12 +1,17 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "@/layouts/RootLayout";
-import Home from "@/pages/Home";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
+import Home from "@/pages/Home";
+import Login from "@/pages/Login";
 import Profile from "@/pages/Profile";
 import Settings from "@/pages/Settings";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <Login />,
+  },
   {
     path: "/",
     element: <RootLayout />,
