@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import { Toaster } from "sonner";
 import Navbar from "../components/Navbar";
 
 export default function RootLayout() {
@@ -8,6 +9,7 @@ export default function RootLayout() {
       <main>
         <Outlet />
       </main>
+      <Toaster />
     </div>
   );
 }

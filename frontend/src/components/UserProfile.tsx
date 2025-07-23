@@ -10,6 +10,7 @@ import {
 import { useAuthContext } from "@/context/authContext";
 import { ChevronDown, LogOut, Settings, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function UserProfile() {
   const { user, logout, getUserInitials } = useAuthContext();
@@ -17,6 +18,7 @@ export default function UserProfile() {
 
   const handleLogout = () => {
     logout();
+    toast.success("Logged out successfully!");
     navigate("/login");
   };
 

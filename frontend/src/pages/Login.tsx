@@ -13,6 +13,7 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 interface LoginFormData {
   username: string;
@@ -38,13 +39,14 @@ export default function Login() {
     try {
       await login(data.username, data.password);
 
+      // Show success toast
+      toast.success("Login successful!");
+
       // Redirect to home or intended page
       navigate("/");
     } catch (err) {
-      form.setError("root", {
-        type: "manual",
-        message: err instanceof Error ? err.message : "Login failed",
-      });
+      // Show error toast instead of form error
+      toast.error(err instanceof Error ? err.message : "Login failed");
     }
   };
 
@@ -115,18 +117,6 @@ export default function Login() {
                 )}
               />
             </div>
-
-            {form.formState.errors.root && (
-              <div className="rounded-md bg-red-50 p-4">
-                <div className="flex">
-                  <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800">
-                      {form.formState.errors.root.message}
-                    </h3>
-                  </div>
-                </div>
-              </div>
-            )}
 
             <div>
               <Button type="submit" disabled={isLoading} className="w-full">
