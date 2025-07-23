@@ -8,6 +8,7 @@ interface AuthContextType {
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
   getUserInitials: () => string;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -16,6 +17,7 @@ const AuthContext = createContext<AuthContextType>({
   login: async () => {},
   logout: () => {},
   getUserInitials: () => "",
+  isLoading: false,
 });
 
 export const AuthContextProvider = ({
@@ -24,8 +26,10 @@ export const AuthContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [user, setUser] = useState<UserDto | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const login = async (username: string, password: string) => {
+    setIsLoading(true);
     try {
       const data = await AuthService.login({ username, password });
 
@@ -37,6 +41,8 @@ export const AuthContextProvider = ({
       });
     } catch (error) {
       throw error; // Re-throw to let the component handle the error
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -58,7 +64,7 @@ export const AuthContextProvider = ({
 
   return (
     <AuthContext.Provider
-      value={{ user, setUser, login, logout, getUserInitials }}
+      value={{ user, setUser, login, logout, getUserInitials, isLoading }}
     >
       {children}
     </AuthContext.Provider>

@@ -21,9 +21,8 @@ interface LoginFormData {
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const { login } = useAuthContext();
+  const { login, isLoading } = useAuthContext();
   const navigate = useNavigate();
 
   const form = useForm<LoginFormData>({
@@ -34,11 +33,9 @@ export default function Login() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    setIsLoading(true);
     form.clearErrors();
 
     try {
-      // Use the login function from auth context
       await login(data.username, data.password);
 
       // Redirect to home or intended page
@@ -48,8 +45,6 @@ export default function Login() {
         type: "manual",
         message: err instanceof Error ? err.message : "Login failed",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 

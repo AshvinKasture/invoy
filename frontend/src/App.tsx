@@ -1,3 +1,5 @@
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { AuthContextProvider } from "@/context/authContext";
 import RootLayout from "@/layouts/RootLayout";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
@@ -14,7 +16,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <RootLayout />,
+    element: (
+      <ProtectedRoute>
+        <RootLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: "/",
@@ -41,7 +47,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <AuthContextProvider>
+      <RouterProvider router={router} />
+    </AuthContextProvider>
+  );
 }
 
 export default App;

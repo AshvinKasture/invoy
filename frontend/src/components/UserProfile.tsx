@@ -9,14 +9,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuthContext } from "@/context/authContext";
 import { ChevronDown, LogOut, Settings, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function UserProfile() {
   const { user, logout, getUserInitials } = useAuthContext();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    console.log("Logging out...");
+    navigate("/login");
   };
 
   // Don't render if no user is logged in
